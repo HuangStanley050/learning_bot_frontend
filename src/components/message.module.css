@@ -8,4 +8,5 @@
   background-color: white;
   transform: translate(-50%, -50%);
   opacity: 0.9;
+  overflow: auto;
 }

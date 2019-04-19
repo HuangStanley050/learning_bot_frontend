@@ -4,9 +4,15 @@ import Cookies from "universal-cookie";
 import {Input, InputGroup, InputGroupAddon} from "reactstrap";
 import {connect} from "react-redux";
 import {record_user_msg, start_text_query} from "../store/actions/actions";
+import UserResponse from "./userResponse";
+import BotResponse from "./botResponse";
+
 const cookies = new Cookies();
 
 class Message extends Component {
+  componentDidUpdate() {
+    this.messagesEnd.scrollIntoView({behavior: "smooth"});
+  }
   state = {
     userInput: ""
   };
@@ -25,7 +31,18 @@ class Message extends Component {
   render() {
     return (
       <div className={messageStyle.message_container}>
-        <h1>Message</h1>
+        {this.props.messages.map((msg, i) => {
+          if (msg.hasOwnProperty("who")) {
+            return <UserResponse key={i} text={msg.text} />;
+          } else {
+            return <BotResponse key={i} text={msg.text.text} />;
+          }
+        })}
+        <div
+          ref={el => {
+            this.messagesEnd = el;
+          }}
+        />
         <form onSubmit={this.submitHandler}>
           <InputGroup>
             <InputGroupAddon addonType="prepend">Enquiry</InputGroupAddon>
@@ -48,7 +65,13 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const mapStateToProps = state => {
+  return {
+    messages: state.messages
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Message);
