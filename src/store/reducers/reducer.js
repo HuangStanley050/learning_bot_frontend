@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
     case actionType.START_TEXT_QUERY_SUCCESS:
       return {
         ...state,
-        messages: [...state.messages, ...action.msg]
+        messages: [...state.messages, action.msg]
       };
     default:
       return state;
