@@ -25,9 +25,13 @@ function* botQueryWorkerSaga(action) {
 function* botEventWorkerSaga(action) {
   try {
     let result = yield axios.post(API.event, action.event);
-    let message = result.data.fulfillmentMessages;
-    yield put(event_query_success(message));
-    console.log(result);
+    let messages = result.data.fulfillmentMessages;
+    let wikiInfo = result.data.wikiInfo;
+    let temp = { ...messages[0] };
+    temp.wikiInfo = wikiInfo;
+    console.log(temp);
+    yield put(event_query_success(temp));
+    //console.log(result);
   } catch (e) {
     console.log(e);
   }

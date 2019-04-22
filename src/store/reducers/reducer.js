@@ -19,7 +19,7 @@ const reducer = (state = initialState, action) => {
       //console.log(action.msg);
       return {
         ...state,
-        messages: [...state.messages, ...action.msg]
+        messages: [...state.messages, action.msg]
       };
     default:
       return state;
