@@ -1,7 +1,7 @@
-import {takeEvery, put} from "redux-saga/effects";
+import { takeEvery, put } from "redux-saga/effects";
 import * as actionType from "../actions/actionTypes";
 import axios from "axios";
-import {text_query_success, event_query_success} from "../actions/actions";
+import { text_query_success, event_query_success } from "../actions/actions";
 const API = {
   text: "http://localhost:8080/api/chatbot/text",
   event: "http://localhost:8080/api/chatbot/event"
@@ -13,12 +13,21 @@ function* botQueryWorkerSaga(action) {
     let result = yield axios.post(API.text, action.query);
     let messages = result.data.fulfillmentMessages;
     let wikiInfo = result.data.wikiInfo;
-    let temp = {...messages[0]};
+    let temp = { ...messages[0] };
     temp.wikiInfo = wikiInfo;
-    // console.log("messages==>", messages[0]);
-    // console.log("wikiInfo===>", wikiInfo);
-    //console.log(temp);
+
     yield put(text_query_success(temp));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* botEventWorkerSaga(action) {
+  try {
+    let result = yield axios.post(API.event, action.event);
+    let message = result.data.fulfillmentMessages;
+    yield put(event_query_success(message));
+    console.log(result);
   } catch (e) {
     console.log(e);
   }
@@ -26,7 +35,7 @@ function* botQueryWorkerSaga(action) {
 
 function* botWatcherSaga() {
   yield takeEvery(actionType.START_TEXT_QUERY, botQueryWorkerSaga);
-  // yield takeEvery(actionType.START_EVENT_QUERY, botEventWorkerSaga);
+  yield takeEvery(actionType.START_EVENT_QUERY, botEventWorkerSaga);
 }
 
 export default botWatcherSaga;

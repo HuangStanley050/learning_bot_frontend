@@ -15,6 +15,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         messages: [...state.messages, action.msg]
       };
+    case actionType.START_EVENT_QUERY_SUCCESS:
+      //console.log(action.msg);
+      return {
+        ...state,
+        messages: [...state.messages, ...action.msg]
+      };
     default:
       return state;
   }
