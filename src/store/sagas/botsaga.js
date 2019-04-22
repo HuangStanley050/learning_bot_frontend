@@ -1,10 +1,10 @@
-import { takeEvery, put } from "redux-saga/effects";
+import {takeEvery, put} from "redux-saga/effects";
 import * as actionType from "../actions/actionTypes";
 import axios from "axios";
-import { text_query_success, event_query_success } from "../actions/actions";
+import {text_query_success, event_query_success} from "../actions/actions";
 const API = {
-  text: "http://localhost:8080/api/chatbot/text",
-  event: "http://localhost:8080/api/chatbot/event"
+  text: "https://chatbot90210.herokuapp.com/api/chatbot/text",
+  event: "https://chatbot90210.herokuapp.com/api/chatbot/event"
 };
 
 function* botQueryWorkerSaga(action) {
@@ -13,7 +13,7 @@ function* botQueryWorkerSaga(action) {
     let result = yield axios.post(API.text, action.query);
     let messages = result.data.fulfillmentMessages;
     let wikiInfo = result.data.wikiInfo;
-    let temp = { ...messages[0] };
+    let temp = {...messages[0]};
     temp.wikiInfo = wikiInfo;
 
     yield put(text_query_success(temp));
@@ -27,7 +27,7 @@ function* botEventWorkerSaga(action) {
     let result = yield axios.post(API.event, action.event);
     let messages = result.data.fulfillmentMessages;
     let wikiInfo = result.data.wikiInfo;
-    let temp = { ...messages[0] };
+    let temp = {...messages[0]};
     temp.wikiInfo = wikiInfo;
     console.log(temp);
     yield put(event_query_success(temp));
